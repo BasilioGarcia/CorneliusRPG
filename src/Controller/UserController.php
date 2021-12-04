@@ -19,9 +19,9 @@ class UserController extends AbstractController
 
         foreach ($users as $user) {
             echo "<h1>{$user->getName()}</h1>";
-           foreach ($user->getCharacters() as $character) {
+            foreach ($user->getCharacters() as $character) {
                 echo "<p>{$character->getName()} - {$character->getUser()->getEmail()}</p>";
-           }
+            }
         }
 
         die();

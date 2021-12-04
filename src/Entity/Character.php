@@ -2,173 +2,72 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
-//Bas name="`character`" en la tabla, palabra reservada
-
-/**
- * Character
- *
- * @ORM\Table(name="`character`", indexes={@ORM\Index(name="fk_character_user", columns={"user_id"}), @ORM\Index(name="fk_character_campaign", columns={"campaign_id"}), @ORM\Index(name="fk_character_system", columns={"system_id"})})
- * @ORM\Entity
- */
 class Character
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    private string $id;
+    private string $name;
+    private bool $status;
+    private \DateTime $createdAt;
+    private \DateTime $updatedAt;
+    //private $campaign;
+    //private $system;
+    private User $user;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
-     */
-    private $name;
+    public function __construct(string $name, User $user)
+    {
+        $this->id = Uuid::v4()->toRfc4122();
+        $this->name = $name;
+        $this->status = true;
+        $this->createdAt = new \DateTime();
+        $this->updatedTime();
+        $this->user = $user;
+    }
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="status", type="boolean", nullable=false, options={"default"="1"})
-     */
-    private $status = true;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
-     */
-    private $updatedAt = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
-     */
-    private $createdAt = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var \Campaign
-     *
-     * @ORM\ManyToOne(targetEntity="Campaign")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="campaign_id", referencedColumnName="id")
-     * })
-     */
-    private $campaign;
-
-    /**
-     * @var \System
-     *
-     * @ORM\ManyToOne(targetEntity="System")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="system_id", referencedColumnName="id")
-     * })
-     */
-    private $system;
-
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    public function getStatus(): ?bool
+    public function isStatus(): bool
     {
         return $this->status;
     }
 
-    public function setStatus(bool $status): self
+    public function setStatus(bool $status): void
     {
         $this->status = $status;
-
-        return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function getUpdatedAt(): \DateTime
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
+        return $this->updatedAt;
     }
 
-    public function getCampaign(): ?Campaign
+    public function updatedTime(): void
     {
-        return $this->campaign;
+        $this->updatedAt = new \DateTime();
     }
 
-    public function setCampaign(?Campaign $campaign): self
-    {
-        $this->campaign = $campaign;
-
-        return $this;
-    }
-
-    public function getSystem(): ?System
-    {
-        return $this->system;
-    }
-
-    public function setSystem(?System $system): self
-    {
-        $this->system = $system;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    //Bas
-
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="characters")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
-     */
-    private $user;
 }

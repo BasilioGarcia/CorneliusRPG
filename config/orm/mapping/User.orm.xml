@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+        <entity name="App\Entity\User" table="users">
+                <id name="id" type="string" column-definition="CHAR(36) NOT NULL"/>
+                <field name="name" type="string" length="20"/>
+                <field name="email" type="string" length="100"/>
+                <field name="password" type="string" length="255"/>
+                <field name="avatar" type="string" length="20" nullable="true"/>
+                <field name="language" type="smallint" length="4"/>
+                <field name="createdAt" type="datetime"/>
+                <field name="updatedAt" type="datetime"/>
+
+                <unique-constraints>
+                        <unique-constraint name="U_users_email" columns="email"/>
+                </unique-constraints>
+
+                <one-to-many field="characters" target-entity="App\Entity\Character" mapped-by="user" />
+        </entity>
+</doctrine-mapping>

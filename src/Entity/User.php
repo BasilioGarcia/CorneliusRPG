@@ -2,87 +2,51 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection; //Bas
 use Doctrine\Common\Collections\Collection; //Bas
+use Symfony\Component\Uid\Uuid;
 
-/**
- * User
- *
- * @ORM\Table(name="user")
- * @ORM\Entity
- */
 class User
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
-     */
-    private $name;
+    private string $id;
+    private string $name;
+    private string $email;
+    private string $password;
+    private string $avatar;
+    private int $language;
+    private \DateTime $createdAt;
+    private \DateTime $updatedAt;
+    private Collection $characters;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255, nullable=false)
-     */
-    private $email;
+    public function __construct(string $name, string $email, string $password)
+    {
+        $this->id = Uuid::v4()->toRfc4122();
+        $this->name = $name;
+        $this->email = $email;
+        $this->password = $password;
+        $this->language = 1;
+        $this->createdAt = new \DateTime();
+        $this->updatedTime();
+        $this->characters = new ArrayCollection();
+    }
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="password", type="string", length=255, nullable=false)
-     */
-    private $password;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="avatar", type="string", length=20, nullable=true)
-     */
-    private $avatar;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="language", type="boolean", nullable=false, options={"default"="1"})
-     */
-    private $language = true;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
-     */
-    private $createdAt = 'CURRENT_TIMESTAMP';
-
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -90,11 +54,10 @@ class User
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -102,7 +65,6 @@ class User
     public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -114,49 +76,39 @@ class User
     public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
-
         return $this;
     }
 
-    public function getLanguage(): ?bool
+    public function getLanguage(): int
     {
         return $this->language;
     }
 
-    public function setLanguage(bool $language): self
+    public function setLanguage(int $language): self
     {
         $this->language = $language;
-
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function getUpdatedAt(): \DateTime
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
+        return $this->updatedAt;
     }
 
-    //Bas
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Character", mappedBy="user")
-     */
-    private $characters;
-
-    public function __construct(){
-        $this->characters = new ArrayCollection();
+    public function updatedTime(): void
+    {
+        $this->updatedAt = new \DateTime();
     }
 
-    /*
-     * @return Collection|Video[]
-     */
-    public function getCharacters(): Collection{
+
+    public function getCharacters(): ArrayCollection | Collection
+    {
         return $this->characters;
     }
+
 }
